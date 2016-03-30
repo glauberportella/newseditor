@@ -1,0 +1,51 @@
+<form name="noticiaForm" ng-submit="salvar(noticia)">
+
+  <div class="row">
+    <div class="col-sm-8" id="noticiaConteudo">
+      <h1 data-mercury="simple" id="noticiaTitulo" ng-bind="noticia.titulo">Título da matéria</h1>
+      <div data-mercury="full" id="noticiaTexto" ng-bind-html="noticia.texto">
+        <p>Conteúdo aqui: texto, imagens, vídeos, etc.</p>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Social</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="social_imagem">Imagem Facebook</label>
+            <input class="form-control" type="file" name="social_imagem" ng-model="noticia.social_imagem" placeholder="Envie uma imagem" ng-file-select="onFileSelect($files)">
+            <small>Preferencialmente nas dimensões 470x246 pixels</small>
+            <img ng-if="noticia.social_imagem" class="img-responsive" ng-src="{{noticia.social_imagem}}" />
+            <button ng-click="noticia.social_imagem = ''" ng-if="noticia.social_imagem" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-trash"></span> Remover imagem</button>
+          </div>
+          <div class="form-group">
+            <label for="social_titulo">Título Facebook</label>
+            <input class="form-control" type="text" name="social_titulo" ng-model="noticia.social_titulo" placeholder="(opcional)">
+          </div>
+          <div class="form-group">
+            <label for="social_descricao">Descrição Facebook</label>
+            <textarea class="form-control" name="social_descricao" ng-model="noticia.social_descricao" placeholder="(opcional)" rows="4"></textarea>
+            <small>Caso uma descrição não seja fornecida um excerto do texto da notícia será utilizado.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="data_noticia">Data da publicação</label>
+            <input class="form-control" type="date" name="data_publicacao" ng-model="noticia.data_noticia">
+          </div>
+        </div>
+      </div>
+
+      <p>
+        <button ng-click="cancelar()" type="button" class="btn btn-default pull-left">Cancelar</button>
+        <button type="submit" class="btn btn-primary pull-right">Salvar</button>
+      </p>
+    </div>
+  </div>
+
+</form>

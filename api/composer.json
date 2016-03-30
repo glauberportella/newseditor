@@ -1,0 +1,13 @@
+{
+    "require": {
+        "silex/silex": "@stable",
+        "swiftmailer/swiftmailer": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "NewsEditorApi\\": "src/",
+            "NewsEditorApi\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {}
+}

@@ -1,0 +1,28 @@
+<div class="page-header">
+  <button ng-click="nova()" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Nova notícia</button>
+  <h1>Notícias</h1>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th width="5%">ID</th>
+      <th>Título</th>
+      <th width="25%">Imagem FB</th>
+      <th width="15%">Data Pub.</th>
+      <th width="15%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in noticias | orderBy:'-data_noticia'">
+      <td>{{item.id}}</td>
+      <td>{{item.titulo}}</td>
+      <td><img ng-src="{{item.social_imagem}}" alt="" height="80"></td>
+      <td>{{item.data_noticia | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+      <td>
+        <button ng-click="editar(item)" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-pencil"></span> Editar</button>
+        <button ng-click="excluir(item)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-trash"></span> Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
