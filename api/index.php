@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use NewsEditorApi\Db\Connection;
 use NewsEditorApi\Db\Repository;
+use NewsEditorApi\Model\Config;
 use NewsEditorApi\Model\Noticia;
 
 /** CORS  */
@@ -19,6 +20,8 @@ $app = new Silex\Application();
 
 $app['debug'] = true;
 
+$app['base_url'] = $_SERVER['HTTP_HOST'];
+
 // Initialize Connection settings
 Connection::setConfig(array(
     'host' => 'localhost',
@@ -27,6 +30,44 @@ Connection::setConfig(array(
     'password' => ''
 ));
 $app['db'] = Connection::getInstance();
+
+/**
+ * CONFIG API
+ */
+$app->get('/config', function() use($app) {
+
+  $repository = new Repository($app['db'], '\NewsEditorApi\Model\Config');
+  $values = $repository->find();
+
+  return $app->json($values);
+
+});
+
+$app->get('/config/{key}', function($key) use($app) {
+
+  return $app->json(array(
+    $key => Config::get($key),
+  ));
+
+});
+
+$app->post('/config', function(Request $request) use($app) {
+
+  $data = json_decode($request->getContent(), true);
+  return Config::addValue($data['chave'], $data['valor'])
+    ? $app->json(array('success' => true, $key => $data[$key]))
+    : $app->json(array('success' => false));
+
+});
+
+$app->put('/config/{key}', function(Request $request) use($app) {
+
+  $data = json_decode($request->getContent(), true);
+  return Config::updateValue($key, $data[$key])
+    ? $app->json(array('success' => true, $key => $data[$key]))
+    : $app->json(array('success' => false));
+
+});
 
 /**
  * NOTICIAS API
@@ -57,12 +98,28 @@ $app->get('/noticias/{id}', function($id) use($app) {
 
 $app->post('/noticias', function(Request $request) use($app) {
     $data = json_decode($request->getContent(), true);
+
+    // create file
+    if (Imagem::isBase64($data['social_imagem'])) {
+        $file = Imagem::base64ToFile($data['social_imagem'], __DIR__.'/files');
+        if ($file) {
+            $data['social_imagem'] = $app['base_url'].'/api/files/'.$file;
+        }
+    }
+
     $noticia = new Noticia();
     foreach ($data as $field => $value) {
         $noticia->{$field} = $value;
     }
     $success = $noticia->add();
     if (!$success) {
+        // remove file
+        if (!empty($file)) {
+            if (file_exists(__DIR__.'/files/'.$file)) {
+                unlink(__DIR__.'/files/'.$file);
+            }
+        }
+
         return $app->json(array(
             'success' => false,
             'message' => 'Erro ao adicionar nova noticia.',

@@ -38,4 +38,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  }).run(function(ConfigStorage) {
+    // load configuration
+    ConfigStorage.refresh();
   });

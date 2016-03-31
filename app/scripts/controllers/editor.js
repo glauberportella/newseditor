@@ -77,8 +77,13 @@ angular.module('newsEditorApp')
     };
 
     $scope.getFile = function () {
-      fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
-        $scope.noticia.social_imagem = result;
-      });
+      var allowed = new Array('image/jpeg', 'image/png', 'image/gif');
+      if (-1 === allowed.indexOf($scope.file.type)) {
+        window.alert('Arquivo não suportado. Selecione apenas arquivos de imagem JPG, PNG ou GIF.');
+      } else {
+        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+          $scope.noticia.social_imagem = result;
+        });
+      }
     };
   });
