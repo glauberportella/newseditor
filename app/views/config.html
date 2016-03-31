@@ -1,0 +1,67 @@
+<form name="configForm" ng-submit="salvar(config)">
+  <div class="modal-header">
+    <h4 class="modal-title">Configurações</h4>
+  </div>
+  <div class="modal-body">
+    <!-- banco de dados -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Banco de Dados</h3>
+      </div>
+      <div class="panel-body">
+        <p>Configure os dados de conexão a seu banco de dados MySQL.</p>
+        <p>Verifique se seu servidor de banco de dados está configurado para acesso remoto.</p>
+        <div class="form-group">
+          <label for="DB_HOST">Host</label>
+          <input class="form-control" type="text" name="DB_HOST" ng-model="config.DB_HOST" placeholder="Endereço do servidor">
+        </div>
+        <div class="form-group">
+          <label for="DB_NAME">Nome do banco de dados</label>
+          <input class="form-control" type="text" name="DB_NAME" ng-model="config.DB_NAME">
+        </div>
+        <div class="form-group">
+          <label for="DB_USER">Usuário</label>
+          <input class="form-control" type="text" name="DB_USER" ng-model="config.DB_USER">
+        </div>
+        <div class="form-group">
+          <label for="DB_PASS">Senha</label>
+          <input class="form-control" type="password" name="DB_PASS" ng-model="config.DB_PASS">
+        </div>
+        <p>
+          <button class="btn btn-default">Testar conexão</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Facebook -->
+    <div ng-if="profile || pages" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Publicação no Facebook</h3>
+      </div>
+      <div class="panel-body">
+        <fieldset>
+          <legend>Seu perfil</legend>
+          <p>Marque caso queira publicar as notícias em sua conta pessoal.</p>
+          <div class="checkbox">
+            <label>
+              <input name="FACEBOOK_PROFILE_ID" ng-model="config.FACEBOOK_PROFILE_ID" value="{{profile.id}}" type="checkbox"> {{profile.name}}
+            </label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Suas páginas</legend>
+          <p>Selecione em quais páginas gostaria de publicar as notícias.</p>
+          <div class="checkbox" ng-repeat="page in pages">
+            <label>
+              <input name="FACEBOOK_PAGES[]" ng-model="config.FACEBOOK_PAGES" value="{{page.id}}" type="checkbox"> {{page.name}}
+            </label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="fechar()">Fechar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </div>
+</form>
