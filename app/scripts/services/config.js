@@ -12,6 +12,10 @@ angular.module('newsEditorApp')
 
     var data = {};
 
+    // Chaves que possuem valor representando objeto JSON
+    // deve ser usado JSON.parse no load()
+    var _keysAsJson = ['FACEBOOK_PAGES'];
+
     /**
      * Resource for API
      */
@@ -48,7 +52,11 @@ angular.module('newsEditorApp')
       data = {};
       var values = _api.query(function() {
         values.forEach(function(item) {
-          data[item.nome] = item.valor;
+          if (-1 === _keysAsJson.indexOf(item.nome)) {
+            data[item.nome] = item.valor;
+          } else {
+            data[item.nome] = JSON.parse(item.valor);
+          }
         });
         deferred.resolve(data);
         $rootScope.$broadcast('config:loaded', {config: data});
@@ -64,6 +72,9 @@ angular.module('newsEditorApp')
       return _api.batchSave(data).$promise;
     };
 
+    /**
+     * Open Config modal
+     */
     var _openModal = function() {
       var fbUid = _get('FACEBOOK_UID') || '';
       var fbAccessToken = _get('FACEBOOK_ACCESS_TOKEN') || '';

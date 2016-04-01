@@ -42,7 +42,7 @@ angular.module('newsEditorApp')
           perms: page.perms
         });
       });
-      Config.set('FACEBOOK_PAGES', JSON.stringify(config.FACEBOOK_PAGES));
+      Config.set('FACEBOOK_PAGES', JSON.stringify(config.fbPages));
 
       Config.sync().then(function() {
         $uibModalInstance.close();
