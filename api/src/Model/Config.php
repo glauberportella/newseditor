@@ -25,9 +25,7 @@ class Config extends ActiveRecord
       if ($stmt->execute(array($key))) {
         $id = (int)$stmt->fetchColumn();
         if ($id > 0)
-          return self::update($key, $value);
-        else
-          return false;
+          return self::updateValue($key, $value);
       }
       // else is new
       $sql = 'INSERT INTO `'.static::$tableName.'` VALUES(NULL, ?, ?)';

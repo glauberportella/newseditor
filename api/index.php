@@ -54,8 +54,15 @@ $app->get('/config/{key}', function($key) use($app) {
 $app->post('/config', function(Request $request) use($app) {
 
   $data = json_decode($request->getContent(), true);
-  return Config::addValue($data['chave'], $data['valor'])
-    ? $app->json(array('success' => true, $key => $data[$key]))
+
+  $success = true;
+
+  foreach ($data as $key => $value) {
+    $success &= Config::updateValue($key, $value);
+  }
+
+  return (bool)$success
+    ? $app->json(array('success' => true))
     : $app->json(array('success' => false));
 
 });

@@ -16,11 +16,12 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'checklist-model'
   ])
   .constant('apiBaseUrl', 'http://localhost:8000/api')
-  .constant('fbAppId', '207044716338965')
-  .constant('fbTestAppId', '207144266329010')
+  .constant('fbAppId', '500657106808675')
+  .constant('fbTestAppId', '500658513475201')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -41,9 +42,9 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  }).run(function($window, $rootScope, ConfigStorage, fbTestAppId, FacebookService) {
+  }).run(function($window, $rootScope, Config, fbTestAppId, FacebookService) {
     // load configuration
-    ConfigStorage.load();
+    Config.load();
 
     $window.fbAsyncInit = function() {
       // Executed when the SDK is loaded

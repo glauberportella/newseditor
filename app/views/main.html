@@ -1,9 +1,10 @@
 <div class="page-header">
   <button ng-click="nova()" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Nova notícia</button>
 
-  <button ng-if="!facebook" ng-click="fbLogin()" class="btn btn-primary pull-right" style="margin-right: 10px;"><i class="fa fa-facebook"></i> Vincular a conta Facebook</button>
-
-  <h1>Notícias <small>{{dominio}}</small></h1>
+  <h1>
+    <button class="btn btn-default" ng-click="config()"><span class="glyphicon glyphicon-cog"></span></button>
+    Notícias <small>{{dominio}}</small>
+  </h1>
 </div>
 
 <table class="table table-striped table-hover">

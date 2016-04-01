@@ -8,7 +8,7 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('EditorCtrl', function ($scope, $location, $timeout, $routeParams, CheckEditor, Noticia, fileReader) {
+  .controller('EditorCtrl', function ($scope, $location, $timeout, $routeParams, CheckEditor, Noticia, fileReader, FacebookService) {
     var empty = {
       titulo: 'Título da notícia',
       texto: 'Conteúdo da noticia aqui: copiar e colar, digitar, etc.',
@@ -65,6 +65,10 @@ angular.module('newsEditorApp')
         $timeout(function() {
           window.alert('Notícia salva com sucesso.');
         }, 1000);
+
+        if (noticia.social_enviar) {
+          FacebookService.publish(noticia);
+        }
       }, function() {
         window.alert('Erro ao salvar notícia, tente novamente mais tarde.');
       });

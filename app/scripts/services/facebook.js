@@ -84,12 +84,20 @@ angular.module('newsEditorApp')
       return _api('/me');
     };
 
+    /**
+     * Publish news to user status or page status
+     */
+    var _publish = function(noticia) {
+
+    };
+
     return {
       api: _api,
       getLoginStatus: _getLoginStatus,
       login: _login,
       pages: _pages,
-      user: _user
+      user: _user,
+      publish: _publish
     };
 
   });

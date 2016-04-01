@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: ConfigmodalCtrl', function () {
+describe('Controller: ConfigCtrl', function () {
 
   // load the controller's module
   beforeEach(module('newsEditorApp'));
 
-  var ConfigmodalCtrl,
+  var ConfigCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    ConfigmodalCtrl = $controller('ConfigmodalCtrl', {
+    ConfigCtrl = $controller('ConfigCtrl', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(ConfigmodalCtrl.awesomeThings.length).toBe(3);
+    expect(ConfigCtrl.awesomeThings.length).toBe(3);
   });
 });

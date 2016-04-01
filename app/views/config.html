@@ -11,9 +11,19 @@
       <div class="panel-body">
         <p>Configure os dados de conexão a seu banco de dados MySQL.</p>
         <p>Verifique se seu servidor de banco de dados está configurado para acesso remoto.</p>
-        <div class="form-group">
-          <label for="DB_HOST">Host</label>
-          <input class="form-control" type="text" name="DB_HOST" ng-model="config.DB_HOST" placeholder="Endereço do servidor">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="DB_HOST">Host</label>
+              <input class="form-control" type="text" name="DB_HOST" ng-model="config.DB_HOST" placeholder="Endereço do servidor">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="DB_PORT">Porta</label>
+              <input class="form-control" type="text" name="DB_PORT" ng-model="config.DB_PORT" placeholder="Porta do servidor">
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="DB_NAME">Nome do banco de dados</label>
@@ -34,7 +44,9 @@
     </div>
 
     <!-- Facebook -->
-    <div ng-if="profile || pages" class="panel panel-default">
+    <a href="" ng-if="!facebook" ng-click="fbLogin()" class="btn btn-primary btn-block"><i class="fa fa-facebook"></i> Vincular a conta Facebook</a>
+
+    <div ng-if="facebook" class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Publicação no Facebook</h3>
       </div>
@@ -44,7 +56,7 @@
           <p>Marque caso queira publicar as notícias em sua conta pessoal.</p>
           <div class="checkbox">
             <label>
-              <input name="FACEBOOK_PROFILE_ID" ng-model="config.FACEBOOK_PROFILE_ID" value="{{profile.id}}" type="checkbox"> {{profile.name}}
+              <input ng-model="config.FACEBOOK_PROFILE_ID" type="checkbox"> {{profile.name}}
             </label>
           </div>
         </fieldset>
@@ -53,11 +65,16 @@
           <p>Selecione em quais páginas gostaria de publicar as notícias.</p>
           <div class="checkbox" ng-repeat="page in pages">
             <label>
-              <input name="FACEBOOK_PAGES[]" ng-model="config.FACEBOOK_PAGES" value="{{page.id}}" type="checkbox"> {{page.name}}
+              <input checklist-model="config.FACEBOOK_PAGES" checklist-value="page" type="checkbox"> {{page.name}}
             </label>
           </div>
         </fieldset>
       </div>
+    </div>
+
+    <div ng-if="errorMsg" class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Erro</strong> {{errorMsg}}
     </div>
   </div>
   <div class="modal-footer">
