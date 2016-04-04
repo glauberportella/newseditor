@@ -76,6 +76,22 @@ $app->put('/config/{key}', function(Request $request) use($app) {
 
 });
 
+$app->post('/testdb', function(Request $request) use($app) {
+    $config = json_decode($request->getContent(), true);
+    $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s', $config['host'], $config['port'], $config['db']);
+    try {
+        $pdo = new \PDO($dsn, $config['user'], $config['pass']);
+    } catch (\PDOException $e) {
+        return $app->json(array(
+            'success' => false,
+            'message' => utf8_encode($e->getMessage())
+        ));
+    }
+    return $app->json(array(
+        'success' => true,
+        'message' => utf8_encode('Conectado com sucesso!')
+    ));
+});
 /**
  * NOTICIAS API
  */

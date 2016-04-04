@@ -8,13 +8,13 @@
  * Service in the newsEditorApp.
  */
 angular.module('newsEditorApp')
-  .service('Config', function ($resource, $rootScope, $q, $uibModal, apiBaseUrl, FacebookService) {
+  .service('Config', function ($resource, $rootScope, $q, $http, $uibModal, apiBaseUrl, FacebookService) {
 
     var data = {};
 
     // Chaves que possuem valor representando objeto JSON
     // deve ser usado JSON.parse no load()
-    var _keysAsJson = ['FACEBOOK_PAGES'];
+    var _valueAsJson = ['FACEBOOK_PAGES'];
 
     /**
      * Resource for API
@@ -52,7 +52,7 @@ angular.module('newsEditorApp')
       data = {};
       var values = _api.query(function() {
         values.forEach(function(item) {
-          if (-1 === _keysAsJson.indexOf(item.nome)) {
+          if (-1 === _valueAsJson.indexOf(item.nome)) {
             data[item.nome] = item.valor;
           } else {
             data[item.nome] = JSON.parse(item.valor);
@@ -130,12 +130,31 @@ angular.module('newsEditorApp')
       }
     };
 
+    var _testDb = function(host, port, dbname, dbuser, dbpass) {
+      var deferred = $q.defer();
+
+      $http.post(apiBaseUrl+'/testdb', {
+        host: host,
+        port: port,
+        db: dbname,
+        user: dbuser,
+        pass: dbpass
+      }).then(function(response) {
+        deferred.resolve(response.data);
+      }, function(err) {
+        deferred.reject(err);
+      })
+
+      return deferred.promise;
+    };
+
     return {
       api: _api,
       set: _set,
       get: _get,
       load: _load,
       sync: _sync,
-      open: _openModal
+      open: _openModal,
+      testDb: _testDb
     };
   });

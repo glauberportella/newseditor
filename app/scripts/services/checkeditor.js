@@ -8,11 +8,11 @@
  * Service in the newsEditorApp.
  */
 angular.module('newsEditorApp')
-  .service('CheckEditor', function ($q) {
+  .service('CheckEditor', function ($q, $window) {
     var _check = function() {
       var deferred = $q.defer();
 
-      if (window.Mercury === undefined) {
+      if ($window.Mercury === undefined) {
         deferred.reject('Seu navegador não suporta nosso editor avançado. Atualize.');
       } else {
         deferred.resolve(true);

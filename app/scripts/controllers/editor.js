@@ -8,7 +8,7 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('EditorCtrl', function ($scope, $location, $timeout, $routeParams, CheckEditor, Noticia, fileReader, FacebookService) {
+  .controller('EditorCtrl', function ($scope, $location, $timeout, $routeParams, $window, CheckEditor, Noticia, fileReader, FacebookService) {
     var empty = {
       titulo: 'Título da notícia',
       texto: 'Conteúdo da noticia aqui: copiar e colar, digitar, etc.',
@@ -27,11 +27,11 @@ angular.module('newsEditorApp')
     // show editor
     CheckEditor.check().then(function() {
 
-      window.Mercury.trigger('toggle:interface');
-      window.Mercury.trigger('reinitialize');
+      $window.Mercury.trigger('toggle:interface');
+      $window.Mercury.trigger('reinitialize');
 
       // save function
-      window.Mercury.PageEditor.prototype.save = function() {
+      $window.Mercury.PageEditor.prototype.save = function() {
         var data = this.serialize();
         var noticia = {
           titulo: data.noticiaTitulo.value,
@@ -53,37 +53,37 @@ angular.module('newsEditorApp')
         $scope.noticia = angular.copy(empty);
       }
     }, function() {
-      window.alert('Por algum motivo o editor não foi carregado, tente atualizar a página.');
+      $window.alert('Por algum motivo o editor não foi carregado, tente atualizar a página.');
     });
 
     $scope.salvar = function(noticia) {
       var resource = new Noticia(noticia);
       resource.$save(function() {
         limparForm();
-        window.Mercury.trigger('toggle:interface');
+        $window.Mercury.trigger('toggle:interface');
         $location.path('/');
         $timeout(function() {
-          window.alert('Notícia salva com sucesso.');
+          $window.alert('Notícia salva com sucesso.');
         }, 1000);
 
         if (noticia.social_enviar) {
           FacebookService.publish(noticia);
         }
       }, function() {
-        window.alert('Erro ao salvar notícia, tente novamente mais tarde.');
+        $window.alert('Erro ao salvar notícia, tente novamente mais tarde.');
       });
     };
 
     $scope.cancelar = function() {
       limparForm();
-      window.Mercury.trigger('toggle:interface');
+      $window.Mercury.trigger('toggle:interface');
       $location.path('/');
     };
 
     $scope.getFile = function () {
       var allowed = new Array('image/jpeg', 'image/png', 'image/gif');
       if (-1 === allowed.indexOf($scope.file.type)) {
-        window.alert('Arquivo não suportado. Selecione apenas arquivos de imagem JPG, PNG ou GIF.');
+        $window.alert('Arquivo não suportado. Selecione apenas arquivos de imagem JPG, PNG ou GIF.');
       } else {
         fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
           $scope.noticia.social_imagem = result;

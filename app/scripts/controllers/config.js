@@ -8,7 +8,7 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('ConfigCtrl', function ($scope, $uibModalInstance, profile, pages, facebook, FacebookService, Config) {
+  .controller('ConfigCtrl', function ($scope, $window, $uibModalInstance, profile, pages, facebook, FacebookService, Config) {
 
     var empty = {
       DB_HOST: '',
@@ -24,7 +24,17 @@ angular.module('newsEditorApp')
     $scope.profile = profile;
     $scope.pages = pages;
 
-    $scope.config = angular.copy(empty);
+    console.log(pages);
+
+    $scope.config = {
+      DB_HOST: Config.get('DB_HOST'),
+      DB_NAME: Config.get('DB_NAME'),
+      DB_USER: Config.get('DB_USER'),
+      DB_PASS: Config.get('DB_PASS'),
+      DB_PORT: Config.get('DB_PORT'),
+      FACEBOOK_PROFILE_ID: Config.get('FACEBOOK_PROFILE_ID'),
+      FACEBOOK_PAGES: Config.get('FACEBOOK_PAGES')
+    };
 
     $scope.salvar = function(config) {
       Config.set('DB_HOST', config.DB_HOST);
@@ -32,17 +42,8 @@ angular.module('newsEditorApp')
       Config.set('DB_USER', config.DB_USER);
       Config.set('DB_PASS', config.DB_PASS);
       Config.set('DB_PORT', config.DB_PORT);
-      Config.set('FACEBOOK_PROFILE_ID', config.FACEBOOK_PROFILE_ID);
-
-      var fbPages = [];
-      config.FACEBOOK_PAGES.forEach(function(page) {
-        fbPages.push({
-          id: page.id,
-          access_token: page.access_token,
-          perms: page.perms
-        });
-      });
-      Config.set('FACEBOOK_PAGES', JSON.stringify(config.fbPages));
+      Config.set('FACEBOOK_PROFILE_ID', config.FACEBOOK_PROFILE_ID.toString());
+      Config.set('FACEBOOK_PAGES', JSON.stringify(config.FACEBOOK_PAGES));
 
       Config.sync().then(function() {
         $uibModalInstance.close();
@@ -79,8 +80,30 @@ angular.module('newsEditorApp')
           $scope.facebook = false;
         }
       }, function(error) {
-        window.alert(error);
+        $window.alert(error);
       });
+    };
+
+    $scope.testarDb = function(config) {
+      $scope.infoMsg = 'Testando...';
+      // try to connect on db
+      Config.testDb(config.DB_HOST, config.DB_PORT, config.DB_NAME, config.DB_USER, config.DB_PASS)
+        .then(function(response) {
+          if (response.success) {
+            $scope.infoMsg = false;
+            $scope.errorMsg = false;
+            $scope.successMsg = response.message;
+          } else {
+            $scope.infoMsg = false;
+            $scope.successMsg = false;
+            $scope.errorMsg = response.message;
+          }
+        })
+        .catch(function(err) {
+          $scope.infoMsg = false;
+          $scope.successMsg = false;
+          $scope.errorMsg = err;
+        });
     };
 
   });
