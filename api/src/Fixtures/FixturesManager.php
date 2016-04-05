@@ -16,17 +16,13 @@ class FixturesManager
 	public static function load()
 	{
 		Connection::setConfig(self::$config);
-
-		self::loadSql(Connection::getInstance(), __DIR__.'/../../install/install.sql');
 		self::loadSql(Connection::getInstance(), __DIR__.'/../../install/fixtures.load.sql');
 	}
 
 	public static function unload()
 	{
 		Connection::setConfig(self::$config);
-
 		self::loadSql(Connection::getInstance(), __DIR__.'/../../install/fixtures.unload.sql');
-		self::loadSql(Connection::getInstance(), __DIR__.'/../../install/uninstall.sql');
 	}
 
 	protected static function loadSql($pdo, $file)

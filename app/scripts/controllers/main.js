@@ -48,6 +48,13 @@ angular.module('newsEditorApp')
     };
 
     $scope.config = function() {
-      Config.open();
+      Config.open().then(function(modalInstance) {
+        modalInstance.result.then(function() {
+          // reload configurations and news
+          Config.load().then(function() {
+            $scope.noticias = Noticia.query();
+          });
+        });
+      });
     };
   });

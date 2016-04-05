@@ -10,12 +10,3 @@ CREATE TABLE IF NOT EXISTS `noticia` (
   CONSTRAINT `fk_noticia_dominio`
   INDEX `noticia_data_idx` (`data_noticia` ASC))
 ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `config` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(255),
-  `valor` TEXT,
-  PRIMARY KEY (`id`),
-  UNIQUE `unq_nome_idx` (`nome`),
-  INDEX `config_nome_idx` (`nome` ASC))
-ENGINE = InnoDB;

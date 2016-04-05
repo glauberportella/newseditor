@@ -69,7 +69,7 @@
           <p>Marque caso queira publicar as notícias em sua conta pessoal.</p>
           <div class="checkbox">
             <label>
-              <input ng-model="config.FACEBOOK_PROFILE_ID" type="checkbox"> {{profile.name}}
+              <input ng-model="config.FACEBOOK_PROFILE_ID" ng-true-value="'{{profile.id}}'" ng-false-value="''" type="checkbox"> {{profile.name}}
             </label>
           </div>
         </fieldset>

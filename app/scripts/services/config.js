@@ -10,7 +10,7 @@
 angular.module('newsEditorApp')
   .service('Config', function ($resource, $rootScope, $q, $http, $uibModal, apiBaseUrl, FacebookService) {
 
-    var data = {};
+    var _data = {};
 
     // Chaves que possuem valor representando objeto JSON
     // deve ser usado JSON.parse no load()
@@ -32,52 +32,55 @@ angular.module('newsEditorApp')
      * Get a config key value
      */
     var _get = function(key) {
-      return data[key];
+      return _data[key];
     };
 
     /**
      * Set a config key value
      */
     var _set = function(key, value) {
-      data[key] = value;
+      _data[key] = value;
       return value;
     };
 
     /**
-     * Load all config from API in data array
+     * Load all config from API in _data array
      */
     var _load = function() {
       var deferred = $q.defer();
 
-      data = {};
+      _data = {};
       var values = _api.query(function() {
         values.forEach(function(item) {
           if (-1 === _valueAsJson.indexOf(item.nome)) {
-            data[item.nome] = item.valor;
+            _data[item.nome] = item.valor;
           } else {
-            data[item.nome] = JSON.parse(item.valor);
+            _data[item.nome] = JSON.parse(item.valor);
           }
         });
-        deferred.resolve(data);
-        $rootScope.$broadcast('config:loaded', {config: data});
+        deferred.resolve(_data);
+        $rootScope.$broadcast('config:loaded', {config: _data});
       });
 
       return deferred.promise;
     };
 
     /**
-     * Sync config values in data array with API
+     * Sync config values in _data array with API
      */
     var _sync = function() {
-      return _api.batchSave(data).$promise;
+      return _api.batchSave(_data).$promise;
     };
 
     /**
      * Open Config modal
      */
     var _openModal = function() {
+      var deferred = $q.defer();
+
       var fbUid = _get('FACEBOOK_UID') || '';
       var fbAccessToken = _get('FACEBOOK_ACCESS_TOKEN') || '';
+      var modal = null;
 
       if (fbUid.length > 0 && fbAccessToken.length > 0) {
         var profile = {},
@@ -88,11 +91,15 @@ angular.module('newsEditorApp')
         }).then(function(response) {
           response.data.forEach(function(page) {
             if (-1 !== page.perms.indexOf('CREATE_CONTENT')) {
-              pages.push(page);
+              pages.push({
+                id: page.id,
+                name: page.name,
+                perms: page.perms
+              });
             }
           });
           // abrir modal de configuracao
-          $uibModal.open({
+          modal = $uibModal.open({
             animation: true,
             templateUrl: 'views/config.html',
             controller: 'ConfigCtrl',
@@ -105,13 +112,17 @@ angular.module('newsEditorApp')
               },
               pages: function () {
                 return pages;
+              },
+              userConfig: function() {
+                return _data;
               }
             }
           });
+          deferred.resolve(modal);
         });
       } else {
         // abrir modal de configuracao
-        $uibModal.open({
+        modal = $uibModal.open({
           animation: true,
           templateUrl: 'views/config.html',
           controller: 'ConfigCtrl',
@@ -124,10 +135,16 @@ angular.module('newsEditorApp')
             },
             pages: function () {
               return [];
+            },
+            userConfig: function() {
+              return _data;
             }
           }
         });
+        deferred.resolve(modal);
       }
+
+      return deferred.promise;
     };
 
     var _testDb = function(host, port, dbname, dbuser, dbpass) {
@@ -143,7 +160,7 @@ angular.module('newsEditorApp')
         deferred.resolve(response.data);
       }, function(err) {
         deferred.reject(err);
-      })
+      });
 
       return deferred.promise;
     };

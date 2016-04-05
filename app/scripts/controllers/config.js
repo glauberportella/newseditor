@@ -8,33 +8,13 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('ConfigCtrl', function ($scope, $window, $uibModalInstance, profile, pages, facebook, FacebookService, Config) {
-
-    var empty = {
-      DB_HOST: '',
-      DB_NAME: '',
-      DB_USER: '',
-      DB_PASS: '',
-      DB_PORT: 3306,
-      FACEBOOK_PROFILE_ID: '',
-      FACEBOOK_PAGES: []
-    };
+  .controller('ConfigCtrl', function ($scope, $window, $uibModalInstance, profile, pages, facebook, userConfig, FacebookService, Config) {
 
     $scope.facebook = facebook;
     $scope.profile = profile;
     $scope.pages = pages;
-
-    console.log(pages);
-
-    $scope.config = {
-      DB_HOST: Config.get('DB_HOST'),
-      DB_NAME: Config.get('DB_NAME'),
-      DB_USER: Config.get('DB_USER'),
-      DB_PASS: Config.get('DB_PASS'),
-      DB_PORT: Config.get('DB_PORT'),
-      FACEBOOK_PROFILE_ID: Config.get('FACEBOOK_PROFILE_ID'),
-      FACEBOOK_PAGES: Config.get('FACEBOOK_PAGES')
-    };
+    // config injetada no modal Config atraves da opcao resolve de $uibModal.open
+    $scope.config = userConfig;
 
     $scope.salvar = function(config) {
       Config.set('DB_HOST', config.DB_HOST);
@@ -42,8 +22,12 @@ angular.module('newsEditorApp')
       Config.set('DB_USER', config.DB_USER);
       Config.set('DB_PASS', config.DB_PASS);
       Config.set('DB_PORT', config.DB_PORT);
+
       Config.set('FACEBOOK_PROFILE_ID', config.FACEBOOK_PROFILE_ID.toString());
-      Config.set('FACEBOOK_PAGES', JSON.stringify(config.FACEBOOK_PAGES));
+
+      if (config.FACEBOOK_PAGES) {
+        Config.set('FACEBOOK_PAGES', JSON.stringify(config.FACEBOOK_PAGES));
+      }
 
       Config.sync().then(function() {
         $uibModalInstance.close();
