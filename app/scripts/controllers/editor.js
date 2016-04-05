@@ -28,7 +28,7 @@ angular.module('newsEditorApp')
     CheckEditor.check().then(function() {
 
       $window.Mercury.trigger('toggle:interface');
-      $window.Mercury.trigger('reinitialize');
+      $window.Mercury.trigger('initialize');
 
       // save function
       $window.Mercury.PageEditor.prototype.save = function() {
