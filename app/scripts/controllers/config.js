@@ -17,6 +17,8 @@ angular.module('newsEditorApp')
     $scope.config = userConfig;
 
     $scope.salvar = function(config) {
+      var domain = config.DOMAIN.replace(/https?:\/\//i, '');
+      Config.set('DOMAIN', domain);
       Config.set('DB_HOST', config.DB_HOST);
       Config.set('DB_NAME', config.DB_NAME);
       Config.set('DB_USER', config.DB_USER);

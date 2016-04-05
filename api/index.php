@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use NewsEditorApi\Db\Connection;
+use NewsEditorApi\Db\SqliteConnection;
 use NewsEditorApi\Db\Repository;
 use NewsEditorApi\Model\Config;
 use NewsEditorApi\Model\Noticia;
@@ -17,26 +18,26 @@ header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
 
 $app = new Silex\Application();
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+  'twig.path' => __DIR__.'/views',
+));
 
 $app['debug'] = true;
 
-$app['base_url'] = $_SERVER['HTTP_HOST'];
-
 // Initialize Connection settings
-Connection::setConfig(array(
-    'host' => 'localhost',
-    'db' => 'newseditor',
-    'user' => 'root',
-    'password' => ''
-));
+SqliteConnection::setConfig(array('db' => __DIR__.'/data/config.db'));
+Connection::setConfig(Config::getConnectionOptions());
 $app['db'] = Connection::getInstance();
+$app['config'] = SqliteConnection::getInstance();
+
+$app['base_url'] = $app['debug'] ? 'http://localhost:8000' : 'http://'.Config::getValue('DOMAIN');
 
 /**
  * CONFIG API
  */
 $app->get('/config', function() use($app) {
 
-  $repository = new Repository($app['db'], '\NewsEditorApi\Model\Config');
+  $repository = new Repository($app['config'], '\NewsEditorApi\Model\Config');
   $values = $repository->find();
 
   return $app->json($values);
@@ -187,6 +188,21 @@ $app->delete('/noticias/{id}', function($id) use ($app) {
         'success' => true
     ));
 });
+
+// url for facebook
+$app->get('/fb/{id}', function($id) use ($app) {
+  $noticia = new Noticia($id);
+
+  if (empty($noticia->id)) {
+    // render error 404
+    return $app['twig']->render('error404.html.twig');
+  }
+
+  $config = Config::getValues();
+
+  return $app['twig']->render('fb.html.twig', array('news' => $noticia->asArray(), 'config' => $config));
+});
+
 
 // Workaround CORS problem with OPTIONS request
 $app->match("{url}", function($url) use ($app){

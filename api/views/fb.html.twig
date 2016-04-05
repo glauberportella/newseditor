@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="{{news.social_titulo}}"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:description" content="{{news.social_descricao}}"/>
+    <meta property="og:image" content="{{news.social_imagem}}"/>
+    {% if config.DOMAIN is defined %}
+      <meta property="og:url" content="http://{{config.DOMAIN}}/api/fb/{{news.id}}"/>
+    {% endif %}
+
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:title" content="{{news.social_titulo}}"/>
+    <meta property="twitter:description" content="{{news.social_descricao}}"/>
+    <meta property="twitter:image" content="{{news.social_imagem}}"/>
+    {% if config.DOMAIN is defined %}
+      <meta property="twitter:url" content="http://{{config.DOMAIN}}/api/fb/{{news.id}}"/>
+    {% endif %}
+
+    <title>{{news.titulo}}</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    body {
+      background-color: #ddd;
+      padding: 40px 0;
+    }
+    .news-container {
+      background-color: #fff;
+      padding: 20px;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      -o-border-radius: 8px;
+      border-radius: 8px;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="news-container">
+        <div class="page-header">
+          <h1>
+            {{news.titulo}}<br>
+            <small><em>Publicada em {{news.data_noticia|date('d/m/Y')}}</em></small>
+          </h1>
+        </div>
+        <div class="news-texto">
+          {{news.texto|raw}}
+        </div>
+        <hr>
+        <div class="news-footer">
+          {% if config.DOMAIN is defined %}
+            <a href="http://{{config.DOMAIN}}" class="" target="_blank">Visite {{config.DOMAIN}}</a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+     <script src="Hello World"></script>
+  </body>
+</html>

@@ -40,6 +40,11 @@ abstract class ActiveRecord implements \JsonSerializable
 		}
 	}
 
+  public function asArray()
+  {
+    return $this->data;
+  }
+
 	/**
 	 * Add a new row on database
 	 * @return boolean

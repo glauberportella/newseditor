@@ -29,6 +29,22 @@ class Config extends ActiveRecord
         );
     }
 
+    public static function getValues()
+    {
+      $sql = 'SELECT `nome`, `valor` FROM `'.static::$tableName.'`';
+
+      $stmt = SqliteConnection::getInstance()->prepare($sql);
+      if (!$stmt->execute())
+          return array();
+
+      $values = array();
+      while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+          $values[$row['nome']] = $row['valor'];
+      }
+
+      return $values;
+    }
+
     public static function getValue($key, $default = null)
     {
       $sql = 'SELECT `valor` FROM `'.static::$tableName.'` WHERE LOWER(`nome`) = LOWER(?)';
