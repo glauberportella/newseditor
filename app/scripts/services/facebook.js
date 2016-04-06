@@ -8,7 +8,7 @@
  * Service in the newsEditorApp.
  */
 angular.module('newsEditorApp')
-  .service('FacebookService', function ($q) {
+  .service('FacebookService', function ($q, Utils) {
 
     /**
      * Facebook login status
@@ -87,8 +87,44 @@ angular.module('newsEditorApp')
     /**
      * Publish news to user status or page status
      */
-    var _publish = function(noticia) {
+    var _publish = function(noticia, profileId, pages, userAccessToken, domain, protocol) {
+      var deferred = $q.defer();
 
+      var responses = [];
+      var errors = [];
+
+      // generate news link
+      protocol = protocol || 'http';
+      var titulo = Utils.slugify(noticia.social_titulo || noticia.titulo);
+      var newsLink = protocol+'://'+domain+'/api/share/noticia/'+noticia.id+'/'+titulo;
+
+      // publish to user status
+      if (profileId !== '') {
+        _api('/'+profileId+'/feeds', 'POST', { link: newsLink, access_token: userAccessToken }).then(function(response) {
+          responses.push({ type: 'profile', id: profileId, response: response});
+        }, function(error) {
+          errors.push({ type: 'profile', id: profileId, error: error });
+        });
+      }
+
+      // publish to pages status
+      if (pages.length) {
+        angular.forEach(pages, function(page) {
+          _api('/'+page.id+'/feeds', 'POST', { link: newsLink, access_token: page.access_token }).then(function(response) {
+            responses.push({ type: 'page', id: page.id, response: response});
+          }, function(error) {
+            errors.push({ type: 'page', id: page.id, error: error});
+          });
+        });
+      }
+
+      if (errors.length) {
+        deferred.reject(errors);
+      } else {
+        deferred.resolve(responses);
+      }
+
+      return deferred.promise;
     };
 
     return {

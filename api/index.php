@@ -189,9 +189,12 @@ $app->delete('/noticias/{id}', function($id) use ($app) {
     ));
 });
 
-// url for facebook
-$app->get('/fb/{id}', function($id) use ($app) {
+// url for social share
+$app->get('/share/noticia/{id}/{slug}', function($id, $slug = null) use ($app) {
   $noticia = new Noticia($id);
+
+  // nao faz nada com slug so para ficar amigavel
+  $slug = $slug; // :)
 
   if (empty($noticia->id)) {
     // render error 404
@@ -200,8 +203,8 @@ $app->get('/fb/{id}', function($id) use ($app) {
 
   $config = Config::getValues();
 
-  return $app['twig']->render('fb.html.twig', array('news' => $noticia->asArray(), 'config' => $config));
-});
+  return $app['twig']->render('share.html.twig', array('news' => $noticia->asArray(), 'config' => $config));
+})->value('slug', null);
 
 
 // Workaround CORS problem with OPTIONS request

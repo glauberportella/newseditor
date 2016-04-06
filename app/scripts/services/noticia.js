@@ -9,5 +9,9 @@
  */
 angular.module('newsEditorApp')
   .factory('Noticia', function ($resource, apiBaseUrl) {
-    return $resource(apiBaseUrl+'/noticias/:id');
+    return $resource(apiBaseUrl+'/noticias/:id', null, {
+      update: {
+        method: 'PUT'
+      }
+    });
   });
