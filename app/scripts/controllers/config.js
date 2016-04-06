@@ -92,4 +92,15 @@ angular.module('newsEditorApp')
         });
     };
 
+    $scope.isFbPageChecked = function(page) {
+      var pages = Config.get('FACEBOOK_PAGES');
+      var checked = false;
+      angular.forEach(pages, function(p) {
+        if (p.id === page.id) {
+          checked = true;
+        }
+      });
+      return checked;
+    };
+
   });

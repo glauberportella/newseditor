@@ -72,27 +72,85 @@ angular.module('newsEditorApp')
         }, 3000);
 
         if (noticia.social_enviar) {
-          var profileId = Config.get('FACEBOOK_PROFILE_ID');
-          var pages = Config.get('FACEBOOK_PAGES');
-          var userAccessToken = Config.get('FACEBOOK_ACCESS_TOKEN');
-          var domain = Config.get('DOMAIN');
-          var protocol = 'http';
-          FacebookService.publish(noticia, profileId, pages, userAccessToken, domain, protocol).then(function(responses) {
-            $rootScope.successMsg = 'Notícia compartilhada no Facebook.'
-            $timeout(function() {
-              $rootScope.successMsg = false;
-            }, 3000);
-          }, function(errors) {
-            $rootScope.errorMsg = 'Ocorreram erros no compartilhamento no Facebook: ';
-            var list = [];
-            angular.forEach(errors, function(err) {
-              list.push() = JSON.stringify(err);
-            });
-            $rootScope.errorMsg += list.join(', ');
-            $timeout(function() {
-              $rootScope.errorMsg = false;
-            }, 10000);
+          FacebookService.getLoginStatus().then(function(response) {
+            if (response.status === 'connected') {
+              Config.set('FACEBOOK_UID', response.authResponse.userID);
+              Config.set('FACEBOOK_ACCESS_TOKEN', response.authResponse.accessToken);
+              var profileId = Config.get('FACEBOOK_PROFILE_ID');
+              var pages = Config.get('FACEBOOK_PAGES');
+              var userAccessToken = Config.get('FACEBOOK_ACCESS_TOKEN');
+              var domain = Config.get('DOMAIN');
+              var protocol = 'http';
+              FacebookService.publish(noticia, profileId, pages, userAccessToken, domain, protocol).then(function() {
+                $rootScope.successMsg = 'Notícia compartilhada no Facebook.';
+                $timeout(function() {
+                  $rootScope.successMsg = false;
+                }, 3000);
+              }, function(errors) {
+                $rootScope.errorMsg = 'Ocorreram erros no compartilhamento no Facebook: '+errors.message;
+                $timeout(function() {
+                  $rootScope.errorMsg = false;
+                }, 10000);
+              });
+            } else {
+              FacebookService.login({
+                scope: 'email,public_profile,user_friends,publish_actions,manage_pages,publish_pages',
+                return_scopes: true
+              }).then(function(response) {
+                Config.set('FACEBOOK_UID', response.authResponse.userID);
+                Config.set('FACEBOOK_ACCESS_TOKEN', response.authResponse.accessToken);
+                Config.set('FACEBOOK_SCOPES', response.authResponse.grantedScopes);
+                var profileId = Config.get('FACEBOOK_PROFILE_ID');
+                var pages = Config.get('FACEBOOK_PAGES');
+                var userAccessToken = Config.get('FACEBOOK_ACCESS_TOKEN');
+                var domain = Config.get('DOMAIN');
+                var protocol = 'http';
+                FacebookService.publish(noticia, profileId, pages, userAccessToken, domain, protocol).then(function() {
+                  $rootScope.successMsg = 'Notícia compartilhada no Facebook.';
+                  $timeout(function() {
+                    $rootScope.successMsg = false;
+                  }, 3000);
+                }, function(errors) {
+                  $rootScope.errorMsg = 'Ocorreram erros no compartilhamento no Facebook: '+errors.message;
+                  $timeout(function() {
+                    $rootScope.errorMsg = false;
+                  }, 10000);
+                });
+              });
+            }
           });
+
+          /*
+          // get login status
+          FacebookService.login({
+            scope: 'email,public_profile,user_friends,publish_actions,manage_pages,publish_pages',
+            return_scopes: true
+          }).then(function(response) {
+            if (response.status === 'connected') {
+              Config.set('FACEBOOK_UID', response.authResponse.userID);
+              Config.set('FACEBOOK_ACCESS_TOKEN', response.authResponse.accessToken);
+              Config.set('FACEBOOK_SCOPES', response.authResponse.grantedScopes);
+              $scope.facebook = true;
+
+              var profileId = Config.get('FACEBOOK_PROFILE_ID');
+              var pages = Config.get('FACEBOOK_PAGES');
+              var userAccessToken = Config.get('FACEBOOK_ACCESS_TOKEN');
+              var domain = Config.get('DOMAIN');
+              var protocol = 'http';
+              FacebookService.publish(noticia, profileId, pages, userAccessToken, domain, protocol).then(function(responses) {
+                $rootScope.successMsg = 'Notícia compartilhada no Facebook.'
+                $timeout(function() {
+                  $rootScope.successMsg = false;
+                }, 3000);
+              }, function(errors) {
+                $rootScope.errorMsg = 'Ocorreram erros no compartilhamento no Facebook: '+errors.message;
+                $timeout(function() {
+                  $rootScope.errorMsg = false;
+                }, 10000);
+              });
+            }
+          });
+          */
         }
       };
 

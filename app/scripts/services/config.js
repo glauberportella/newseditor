@@ -93,13 +93,11 @@ angular.module('newsEditorApp')
             if (-1 !== page.perms.indexOf('CREATE_CONTENT')) {
               pages.push({
                 id: page.id,
-                access_token: page.access_token,
                 name: page.name,
                 perms: page.perms
               });
             }
           });
-          console.log(pages);
           // abrir modal de configuracao
           modal = $uibModal.open({
             animation: true,
