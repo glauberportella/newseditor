@@ -104,7 +104,7 @@ angular.module('newsEditorApp')
               body: {
                 link: newsLink
               }
-            }).then(function(response) {
+            }, profileId).then(function(response) {
               deferred.resolve(response);
             }, function(error) {
               deferred.reject(error);
@@ -140,10 +140,12 @@ angular.module('newsEditorApp')
        return _api('/'+profileId+'/feed', 'POST', params);
     };
 
-    var __publishInUserPages = function(pages, params) {
+    var __publishInUserPages = function(pages, params, userId) {
       var deferred = $q.defer();
 
-      _api('/me/pages', 'GET', { access_token: params.access_token }).then(function(response) {
+      userId = userId || 'me';
+
+      _api('/'+userId+'/accounts', 'GET', { access_token: params.access_token }).then(function(response) {
         var fbApiPages = response.data;
         var batch = [];
         angular.forEach(fbApiPages, function(fbp) {
@@ -171,6 +173,8 @@ angular.module('newsEditorApp')
         } else {
           deferred.resolve(null);
         }
+      }, function(error) {
+        deferred.reject(error);
       });
 
       return deferred.promise;
