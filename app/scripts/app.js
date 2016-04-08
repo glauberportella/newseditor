@@ -98,4 +98,14 @@ angular
 
       ref.parentNode.insertBefore(js, ref);
     }(document));
+
+    // initialize Mercury Editor
+    new Mercury.PageEditor(null, {
+      src: '/scripts/mercury',
+      visible: false,
+      localization: {
+        enabled: true,
+        preferredLocale: 'pt-BR'
+      }
+    });
   });

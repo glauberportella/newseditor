@@ -24,23 +24,14 @@ angular.module('newsEditorApp')
       $scope.noticiaForm.$setUntouched();
     };
 
-    // initialize Mercury Editor
-    new Mercury.PageEditor(null, {
-      src: 'scripts/mercury/javascripts',
-      localization: {
-        enabled: true,
-        preferredLocale: 'pt-BR'
-      },
-    });
-
     // show editor
-    /*CheckEditor.check().then(function() {
+    CheckEditor.check().then(function() {
 
-      $window.Mercury.trigger('toggle:interface');
-      $window.Mercury.trigger('reinitialize:frame');
+      Mercury.trigger('toggle:interface');
+      Mercury.trigger('initialize:frame');
 
       // save function
-      $window.Mercury.PageEditor.prototype.save = function() {
+      Mercury.PageEditor.prototype.save = function() {
         var data = this.serialize();
         var noticia = {
           titulo: data.noticiaTitulo.value,
@@ -66,14 +57,13 @@ angular.module('newsEditorApp')
     }, function() {
       $window.alert('Por algum motivo o editor não foi carregado, tente atualizar a página.');
     });
-    */
 
     $scope.salvar = function(noticia) {
       var resource = new Noticia(noticia);
 
       var successFn = function() {
         limparForm();
-        $window.Mercury.trigger('toggle:interface');
+        Mercury.trigger('toggle:interface');
         $location.path('/');
 
         $rootScope.successMsg = 'Notícia salva com sucesso.';
@@ -149,7 +139,7 @@ angular.module('newsEditorApp')
 
     $scope.cancelar = function() {
       limparForm();
-      $window.Mercury.trigger('toggle:interface');
+      Mercury.trigger('toggle:interface');
       $location.path('/');
     };
 
