@@ -8,7 +8,7 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('MainCtrl', function ($scope, $location, $uibModal, $window, Noticia, CheckEditor, Config) {
+  .controller('MainCtrl', function ($scope, $location, $uibModal, $window, Noticia, Config) {
 
     /**
      * Listen to Config loaded event
@@ -22,20 +22,12 @@ angular.module('newsEditorApp')
     $scope.noticias = Noticia.query();
 
     $scope.nova = function() {
-      CheckEditor.check().then(function() {
-        $location.path('/editor');
-      }, function(err) {
-        $window.alert(err);
-      });
+      $location.path('/editor');
     };
 
     $scope.editar = function(noticia) {
-      CheckEditor.check().then(function() {
-        // pode editar
-        $location.path('/editor/'+noticia.id);
-      }, function(err) {
-        $window.alert(err);
-      });
+      // pode editar
+      $location.path('/editor/'+noticia.id);
     };
 
     $scope.excluir = function(noticia) {

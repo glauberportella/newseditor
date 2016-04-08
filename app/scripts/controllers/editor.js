@@ -8,7 +8,7 @@
  * Controller of the newsEditorApp
  */
 angular.module('newsEditorApp')
-  .controller('EditorCtrl', function ($scope, $rootScope, $location, $timeout, $routeParams, $window, CheckEditor, Noticia, fileReader, FacebookService, Config) {
+  .controller('EditorCtrl', function ($scope, $rootScope, $location, $timeout, $routeParams, $window, Noticia, fileReader, FacebookService, Config) {
     var empty = {
       titulo: 'Título da notícia',
       texto: 'Conteúdo da noticia aqui: copiar e colar, digitar, etc.',
@@ -24,46 +24,32 @@ angular.module('newsEditorApp')
       $scope.noticiaForm.$setUntouched();
     };
 
-    // show editor
-    CheckEditor.check().then(function() {
+    $scope.froalaOptions = {
+      toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'emoticons', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'quote', 'insertHR', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+      toolbarButtonsSM: ['bold', 'italic', 'fontFamily', 'fontSize', '|', 'color', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'html'],
+      toolbarButtonsXS: ['bold', 'italic', 'fontFamily', 'fontSize', '|', 'color', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'html']
+    };
 
-      $window.Mercury.trigger('toggle:interface');
-      $window.Mercury.trigger('reinitialize');
-
-      // save function
-      Mercury.PageEditor.prototype.save = function() {
-        var data = this.serialize();
-        var noticia = {
-          titulo: data.noticiaTitulo.value,
-          texto: data.noticiaTexto.value,
-          data_noticia: $scope.noticia.data_noticia,
-          social_titulo: $scope.noticia.social_titulo,
-          social_descricao: $scope.noticia.social_descricao,
-          social_imagem: $scope.noticia.social_imagem
-        };
-        $scope.salvar(noticia);
-      };
-
-      if ($routeParams.id) {
-        var noticia = Noticia.get({id: $routeParams.id}, function() {
-          noticia.data_noticia = new Date(noticia.data_noticia);
-          $scope.noticia = noticia;
-          $scope.updating = true;
-        });
-      } else {
-        $scope.noticia = angular.copy(empty);
-        $scope.updating = false;
-      }
-    }, function() {
-      $window.alert('Por algum motivo o editor não foi carregado, tente atualizar a página.');
-    });
+    if ($routeParams.id) {
+      var noticia = Noticia.get({id: $routeParams.id}, function() {
+        noticia.data_noticia = new Date(noticia.data_noticia);
+        $scope.noticia = noticia;
+        $scope.updating = true;
+      });
+    } else {
+      $scope.noticia = angular.copy(empty);
+      $scope.updating = false;
+    }
 
     $scope.salvar = function(noticia) {
+
+      // titulo
+      noticia.titulo = angular.element('#noticiaTitulo').html();
+
       var resource = new Noticia(noticia);
 
       var successFn = function() {
         limparForm();
-        Mercury.trigger('toggle:interface');
         $location.path('/');
 
         $rootScope.successMsg = 'Notícia salva com sucesso.';
@@ -139,7 +125,6 @@ angular.module('newsEditorApp')
 
     $scope.cancelar = function() {
       limparForm();
-      Mercury.trigger('toggle:interface');
       $location.path('/');
     };
 

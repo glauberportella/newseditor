@@ -17,11 +17,17 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'checklist-model'
+    'checklist-model',
+    'froala'
   ])
   .constant('apiBaseUrl', 'http://localhost:8000/api')
   .constant('fbAppId', '500657106808675')
   .constant('fbTestAppId', '500658513475201')
+  .value('froalaConfig', {
+      toolbarInline: false,
+      placeholderText: 'Digite o conteúdo da notícia aqui',
+      language: 'pt_br'
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -99,13 +105,4 @@ angular
       ref.parentNode.insertBefore(js, ref);
     }(document));
 
-    // initialize Mercury Editor
-    new Mercury.PageEditor(null, {
-      src: '/scripts/mercury',
-      visible: false,
-      localization: {
-        enabled: true,
-        preferredLocale: 'pt-BR'
-      }
-    });
   });

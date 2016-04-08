@@ -1,13 +1,8 @@
-# TODO List
-
-1. Fix Mercury toggle interface when goto route /editor, the title is not editable
-2. Upload/select image on server from midia dialog
-
 # NewsEditor
 
 A cool news editor for multipurpose
 
-It uses the cool [Mercury Editor](http://jejacks0n.github.io/mercury/) to give news editor on the fly.
+It uses the cool [Froala Editor](https://www.froala.com/wysiwyg-editor) to give news editor on the fly.
 
 This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
 version 0.15.1.
@@ -19,6 +14,10 @@ Run `grunt` for building and `grunt serve` for preview.
 ## Testing
 
 Running `grunt test` will run the unit tests with karma.
+
+# TODO List
+
+(None)
 
 # License
 

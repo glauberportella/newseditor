@@ -10,7 +10,7 @@
     <meta property="og:description" content="{{news.social_descricao}}"/>
     <meta property="og:image" content="{{news.social_imagem}}"/>
     {% if config.DOMAIN is defined %}
-      <meta property="og:url" content="http://{{config.DOMAIN}}/api/fb/{{news.id}}"/>
+      <meta property="og:url" content="http://{{config.DOMAIN}}/api/share/noticia/{{news.id}}/{{news.titulo}}"/>
     {% endif %}
 
     <meta name="twitter:card" content="summary">
@@ -18,13 +18,15 @@
     <meta property="twitter:description" content="{{news.social_descricao}}"/>
     <meta property="twitter:image" content="{{news.social_imagem}}"/>
     {% if config.DOMAIN is defined %}
-      <meta property="twitter:url" content="http://{{config.DOMAIN}}/api/fb/{{news.id}}"/>
+      <meta property="twitter:url" content="http://{{config.DOMAIN}}/api/share/noticia/{{news.id}}/{{news.titulo}}"/>
     {% endif %}
 
     <title>{{news.titulo}}</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link href="http://{{config.DOMAIN}}/api/views/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -58,7 +60,7 @@
             <small><em>Publicada em {{news.data_noticia|date('d/m/Y')}}</em></small>
           </h1>
         </div>
-        <div class="news-texto">
+        <div class="fr-view news-texto">
           {{news.texto|raw}}
         </div>
         <hr>

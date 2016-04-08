@@ -2,10 +2,8 @@
 
   <div class="row">
     <div class="col-sm-8" id="noticiaConteudo">
-      <h1 data-mercury="simple" id="noticiaTitulo" ng-bind="noticia.titulo">Título da matéria</h1>
-      <div data-mercury="full" id="noticiaTexto" ng-bind-html="noticia.texto">
-        <p>Conteúdo aqui: texto, imagens, vídeos, etc.</p>
-      </div>
+      <h1 contenteditable="true" id="noticiaTitulo" ng-bind="noticia.titulo">Título da matéria</h1>
+      <textarea froala="froalaOptions" id="noticiaTexto" ng-model="noticia.texto"></textarea>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-default">
