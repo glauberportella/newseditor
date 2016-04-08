@@ -24,8 +24,17 @@ angular.module('newsEditorApp')
       $scope.noticiaForm.$setUntouched();
     };
 
+    // initialize Mercury Editor
+    new Mercury.PageEditor(null, {
+      src: 'scripts/mercury/javascripts',
+      localization: {
+        enabled: true,
+        preferredLocale: 'pt-BR'
+      },
+    });
+
     // show editor
-    CheckEditor.check().then(function() {
+    /*CheckEditor.check().then(function() {
 
       $window.Mercury.trigger('toggle:interface');
       $window.Mercury.trigger('reinitialize:frame');
@@ -57,6 +66,7 @@ angular.module('newsEditorApp')
     }, function() {
       $window.alert('Por algum motivo o editor não foi carregado, tente atualizar a página.');
     });
+    */
 
     $scope.salvar = function(noticia) {
       var resource = new Noticia(noticia);

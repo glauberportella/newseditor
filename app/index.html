@@ -15,6 +15,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="scripts/mercury/stylesheets/mercury.bundle.css">
     <!-- endbuild -->
   </head>
   <body ng-app="newsEditorApp">
@@ -73,7 +74,10 @@
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/mercury/javascripts/mercury_loader.js?pack=bundled&src=/scripts/mercury&visible=false"></script>
+        <script src="scripts/mercury/javascripts/jquery-1.7.js"></script>
+        <script src="scripts/mercury/javascripts/mercury.min.js"></script>
+        <script src="scripts/mercury/javascripts/mercury_dialogs.js"></script>
+        <script src="scripts/mercury/javascripts/pt.locale.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/services/noticia.js"></script>
         <script src="scripts/directives/fileselect.js"></script>
