@@ -13,6 +13,8 @@ angular.module('newsEditorApp')
     /**
      * Listen to Config loaded event
      */
+    $scope.dominio = Config.get('DOMAIN');
+
     $scope.$on('config:loaded', function() {
       $scope.dominio = Config.get('DOMAIN');
     });

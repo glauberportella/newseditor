@@ -28,7 +28,7 @@ angular.module('newsEditorApp')
     CheckEditor.check().then(function() {
 
       $window.Mercury.trigger('toggle:interface');
-      $window.Mercury.trigger('initialize');
+      $window.Mercury.trigger('reinitialize:frame');
 
       // save function
       $window.Mercury.PageEditor.prototype.save = function() {
@@ -119,38 +119,6 @@ angular.module('newsEditorApp')
               });
             }
           });
-
-          /*
-          // get login status
-          FacebookService.login({
-            scope: 'email,public_profile,user_friends,publish_actions,manage_pages,publish_pages',
-            return_scopes: true
-          }).then(function(response) {
-            if (response.status === 'connected') {
-              Config.set('FACEBOOK_UID', response.authResponse.userID);
-              Config.set('FACEBOOK_ACCESS_TOKEN', response.authResponse.accessToken);
-              Config.set('FACEBOOK_SCOPES', response.authResponse.grantedScopes);
-              $scope.facebook = true;
-
-              var profileId = Config.get('FACEBOOK_PROFILE_ID');
-              var pages = Config.get('FACEBOOK_PAGES');
-              var userAccessToken = Config.get('FACEBOOK_ACCESS_TOKEN');
-              var domain = Config.get('DOMAIN');
-              var protocol = 'http';
-              FacebookService.publish(noticia, profileId, pages, userAccessToken, domain, protocol).then(function(responses) {
-                $rootScope.successMsg = 'Notícia compartilhada no Facebook.'
-                $timeout(function() {
-                  $rootScope.successMsg = false;
-                }, 3000);
-              }, function(errors) {
-                $rootScope.errorMsg = 'Ocorreram erros no compartilhamento no Facebook: '+errors.message;
-                $timeout(function() {
-                  $rootScope.errorMsg = false;
-                }, 10000);
-              });
-            }
-          });
-          */
         }
       };
 

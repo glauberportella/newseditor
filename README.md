@@ -1,8 +1,7 @@
 # TODO List
 
-3. Create social description from news text
 1. Fix Mercury toggle interface when goto route /editor, the title is not editable
-2. Fix when close editor Mercury the domain info on News list go away?!
+2. Upload/select image on server from midia dialog
 
 # NewsEditor
 
