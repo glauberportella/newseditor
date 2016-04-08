@@ -101,18 +101,34 @@ $app->get('/noticias', function(Request $request) use($app) {
     $limit = $request->get('limit', 25);
     $offset = ($page - 1) * $limit;
 
-    $conditions = array();
+    $repository = new Repository($app['db'], '\NewsEditorApi\Model\Noticia');
 
+    $conditions = array();
     foreach ($request->query as $field => $value) {
+        // TODO add conditions in another format on query string
+        if ($field == 'limit' || $field == 'page')
+            continue;
         $conditions[$field] = $value;
     }
-
+    // total rows
+    $total = $repository->totalRows($conditions);
     $orderBy = array();
-
-    $repository = new Repository($app['db'], '\NewsEditorApi\Model\Noticia');
     $noticias = $repository->find($conditions, $orderBy, $offset, $limit);
 
-    return $app->json($noticias);
+    if (false === $noticias) {
+        return $app->json(array(
+            'success' => false,
+            'message' => 'Erro ao obter noticias.'
+        ));
+    }
+
+    return $app->json(array(
+        'success' => true,
+        'total' => $total,
+        'page' => $page,
+        'limit' => $limit,
+        'items' => $noticias
+    ));
 });
 
 $app->get('/noticias/{id}', function($id) use($app) {

@@ -16,7 +16,7 @@ abstract class ActiveRecord implements \JsonSerializable
 	 * Can be set on ActiveRecord child if the primary key column name is different from 'id'
 	 * @var string
 	 */
-	protected $primaryKey = 'id';
+	public static $primaryKey = 'id';
 
 	/**
 	 * The internal ActiveRecord data values
@@ -61,7 +61,7 @@ abstract class ActiveRecord implements \JsonSerializable
 		$success = $stmt->execute($values);
 
 		if ($success) {
-			$this->{$this->primaryKey} = $this->connection->lastInsertId();
+			$this->{static::$primaryKey} = $this->connection->lastInsertId();
 		}
 
 		return $success;
@@ -73,11 +73,11 @@ abstract class ActiveRecord implements \JsonSerializable
 	 */
 	public function update()
 	{
-		$pk = $this->data[$this->primaryKey];
+		$pk = $this->data[static::$primaryKey];
 
 		// unset primary key from update fields
 		$data = $this->data;
-		unset($data[$this->primaryKey]);
+		unset($data[static::$primaryKey]);
 
 		// updates = 'field1 = ?, field2 = ?, ..., fieldN = ?'
 		$updates = implode('=?,', array_keys($data));
@@ -85,7 +85,7 @@ abstract class ActiveRecord implements \JsonSerializable
 		// update values
 		$values = array_values($data);
 
-		$sql = 'UPDATE '.static::$tableName." SET $updates WHERE {$this->primaryKey} = $pk";
+		$sql = 'UPDATE '.static::$tableName.' SET $updates WHERE '.static::$primaryKey.' = $pk';
 
 		$stmt = $this->connection->prepare($sql);
 		return $stmt->execute($values);
@@ -97,8 +97,8 @@ abstract class ActiveRecord implements \JsonSerializable
 	 */
 	public function delete()
 	{
-		$pk = $this->data[$this->primaryKey];
-		$sql = 'DELETE FROM '.static::$tableName." WHERE {$this->primaryKey} = ?";
+		$pk = $this->data[static::$primaryKey];
+		$sql = 'DELETE FROM '.static::$tableName.' WHERE '.static::$primaryKey.' = ?';
 		$stmt = $this->connection->prepare($sql);
 		$success = $stmt->execute(array($pk));
 		if ($success) {
@@ -139,7 +139,7 @@ abstract class ActiveRecord implements \JsonSerializable
 	 */
 	private function _get($id)
 	{
-		$sql = 'SELECT * FROM '.static::$tableName." WHERE {$this->primaryKey} = ?";
+		$sql = 'SELECT * FROM '.static::$tableName.' WHERE '.static::$primaryKey.' = ?';
 
 		$stmt = $this->connection->prepare($sql);
 		if (!$stmt->execute(array($id))) {
